@@ -2,6 +2,11 @@ package Programmers.Kakao.delivery_2023;
 
 import java.util.LinkedList;
 
+/*
+주요 아이디어
+1. deliveries, pickups 두 array 에서 가장 먼 집부터 배달 혹은 수거를
+   진행하였을 때의 가장 끝 idx 두 개중 큰 값이 각 단계에서 가야하는 거리이다.
+ */
 class Solution {
     public long solution(int cap, int n, int[] deliveries, int[] pickups) {
 
