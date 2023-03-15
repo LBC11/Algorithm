@@ -1,4 +1,4 @@
-package Programmers.Kakao.delivery_2023;
+package Programmers.Kakao.Blind_Recruitment_2023.Delivery_And_PickUp;
 
 import java.util.LinkedList;
 

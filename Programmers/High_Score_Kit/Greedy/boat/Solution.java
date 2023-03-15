@@ -1,4 +1,4 @@
-package Programmers.Kakao.boat;
+package Programmers.High_Score_Kit.Greedy.boat;
 
 import java.util.HashMap;
 
