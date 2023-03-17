@@ -8,7 +8,7 @@ public class Test {
 
         Solution s = new Solution();
 
-        long[] numbers = {63, 111, 95};
+        long[] numbers = {7, 42, 5};
 
         System.out.println(Arrays.toString(s.solution(numbers)));
     }
