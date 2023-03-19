@@ -2,7 +2,24 @@ package Programmers.Kakao.Blind_Recruitment_2023.Escape_Maze;
 
 import java.util.*;
 
-class Solution {
+/*
+방법
+1. 시작 지점에서 bfs 로 탐색 시작
+2. 움직일 수 있는 기회보다 현 시점에서 goal 까지의 거리가 멀다면 탐색 x
+3. bfs 로 탐색할 때 경로를 일일이 clone 하면 시간 복잡도가 factorial 이 된다.
+   -> Path class 선언 후 parent 라는 간선을 이어주는 것으로 경로를 이어주는 것으로 해결
+4. K 번 움직이고 goal 에 도착했다면 priority queue 에 넣는다.
+5. 최종적으로 pq 에서 poll 하는 것으로 가장 우선순위가 높은 경로 return
+
+실패 분석
+1. 경로 탐색의 경우 자동적으로 bfs 을 써야 한다는 고정 관념
+2. 이 문제의 경우 다른 경로 탐색 문제와 다르게 장애물이 없고
+   방문한 장소를 다시 방문할 수 있기에 굳이 bfs 의 방식처럼
+   하나하나 방문하면서 경로를 탐색할 필요가 없다.
+
+-> 결론: 이 방식으로는 시간 초과 발생
+ */
+class Solution2 {
 
     char[] chars = {'u', 'd', 'r', 'l'};
     int[] dx = {-1, 1, 0, 0};
