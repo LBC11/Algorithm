@@ -7,7 +7,7 @@ public class Test {
 
         int n = 5;
         int m = 4;
-        int x = 5;
+        int x = 3;
         int y = 1;
         int r = 4;
         int c = 1;
