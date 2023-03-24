@@ -1,7 +1,11 @@
 package Programmers.Kakao.Blind_Recruitment_2023.Escape_Maze;
 
 import java.util.HashMap;
+/*
 
+실패 분석
+1. 항상 목적지에 도착한 후 남은 k 를 사용하는 경우는 사전적으로 가장 앞선 route 라는 것을 보장하지 못한다.
+ */
 class Solution {
 
     // 순서는 사전순으로 배정
