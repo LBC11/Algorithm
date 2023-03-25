@@ -7,6 +7,12 @@ import java.util.HashMap;
 실패 분석
 1. 항상 목적지에 도착한 후 남은 k 를 사용하는 경우는 사전적으로 가장 앞선 route 라는 것을 보장하지 못한다.
 2. 우선순위가 가장 낮은 u 를 가장 마지막에 해야 하는 데 d 와 묶어서 생각하는 바람에 헤맸다.
+3. 우선순위가 낮은 애들은 최대한 뒤에 배치해야 하는데 이것을 간과했다.
+
+주요 아이디어
+1. 목적지에 도착하기까지의 거리보다 k 가 작거나 둘을 뺀 값이 홀수라면 impossible
+2. 가능한 모든 route 중 가장 아래면서 왼쪽인 지점을 거치는 것이 정답이다.
+3. 2를 달성하기 위해 d 와 l 방향으로 최대한 움직인 후 남은 횟수는 rl 을 반복하면서 소모한다.
  */
 class Solution {
 
@@ -38,7 +44,7 @@ class Solution {
         HashMap<Integer, Integer> map = new HashMap<>();
 
         for(int i=0; i<4; i++) {
-            map.put(i, i);
+            map.put(i, 0);
         }
 
         // 이동할 수 있는 남은 횟수
@@ -70,27 +76,42 @@ class Solution {
 
         StringBuilder sb = new StringBuilder();
 
-        int left_d = Math.min(left / 2, n - goal_x);
+        // 가능한 가장 아래쪽으로 이동
+        int left_d = Math.min(left / 2, n - (x + map.get(0)));
         map.put(0, map.get(0) + left_d);
+
+        // d 로 움직인 만큼 나중에 u 로도 움직여야 한다.
         map.put(3, map.get(3) + left_d);
 
+        // d 로 이동 실행
         sb.append(new String(new char[map.get(0)]).replace('\u0000', chars[0]));
 
+        // 움직일 수 있는 횟수 차감
         left -= (left_d * 2);
 
+        // 가능한 가장 왼쪽으로 이동
         int left_l = Math.min(left / 2, y - map.get(1));
         map.put(1, map.get(1) + left_l);
+
+        // l 로 움직인 만큼 나중에 r 로도 움직여야 한다.
         map.put(2, map.get(2) + left_l);
 
         sb.append(new String(new char[map.get(1)]).replace('\u0000', chars[1]));
 
         left -= (left_l * 2);
 
+        // 그래도 남은 움직일 수 있는 횟수는 rl 로 처리한다.
+        // 이미 가장 아래쪽 왼쪽에 위치해 있는 상황이기에 r 보다
+        // 우선순위가 높은 d 혹은 u 로 움직일 수 없다.
+        // u 는 r 보다 우선순위가 낮기 때문에 제외한다.
         for (int i = 0; i < left / 2; i++) {
             sb.append("rl");
         }
 
+        // r 로 이동 실행
         sb.append(new String(new char[map.get(2)]).replace('\u0000', chars[2]));
+
+        // l 로 이동 실행
         sb.append(new String(new char[map.get(3)]).replace('\u0000', chars[3]));
 
         return sb.toString();

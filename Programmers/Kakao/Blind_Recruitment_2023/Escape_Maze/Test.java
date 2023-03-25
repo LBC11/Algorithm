@@ -8,10 +8,10 @@ public class Test {
         int n = 5;
         int m = 4;
         int x = 3;
-        int y = 1;
-        int r = 4;
-        int c = 1;
-        int k = 3;
+        int y = 2;
+        int r = 2;
+        int c = 3;
+        int k = 12;
 
         System.out.println(s.solution(n, m, x, y, r, c, k));
     }
