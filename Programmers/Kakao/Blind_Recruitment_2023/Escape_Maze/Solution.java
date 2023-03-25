@@ -18,8 +18,6 @@ class Solution {
 
     // 순서는 사전순으로 배정
     char[] chars = {'d', 'l', 'r', 'u'};
-    int[] dx = {1, 0, 0, -1};
-    int[] dy = {0, -1, 1, 0};
 
     int goal_x;
     int goal_y;
