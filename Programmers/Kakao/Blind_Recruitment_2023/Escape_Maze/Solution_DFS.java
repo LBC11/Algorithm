@@ -21,7 +21,7 @@ import java.util.Queue;
 
 -> 결론: 이 방식으로는 시간 초과 발생
  */
-class Solution2 {
+class Solution_DFS {
 
     char[] chars = {'u', 'd', 'r', 'l'};
     int[] dx = {-1, 1, 0, 0};
@@ -40,16 +40,16 @@ class Solution2 {
 
     private void bfs(int sx, int sy, int k) {
 
-        Queue<Node_BFS> queue = new LinkedList<>();
-        queue.add(new Node_BFS(0, sx, sy, new Path_BFS()));
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(new Node(0, sx, sy, new Path()));
 
         while (!queue.isEmpty()) {
 
-            Node_BFS curr = queue.poll();
+            Node curr = queue.poll();
             int curr_x = curr.x;
             int curr_y = curr.y;
             int curr_cnt = curr.cnt;
-            Path_BFS curr_path = curr.path;
+            Path curr_path = curr.path;
 
             // k 번만큼 움직였다면
             if (curr_cnt == k) {
@@ -82,7 +82,7 @@ class Solution2 {
 
                 if (x < 0 || y < 0 || x >= map.length || y >= map[0].length) continue;
 
-                queue.add(new Node_BFS(curr_cnt + 1, x, y, new Path_BFS(chars[i], curr_path)));
+                queue.add(new Node(curr_cnt + 1, x, y, new Path(chars[i], curr_path)));
             }
         }
     }
@@ -117,9 +117,9 @@ class Node {
     int cnt;
     int x;
     int y;
-    Path_BFS path;
+    Path path;
 
-    public Node(int cnt, int x, int y, Path_BFS path) {
+    public Node(int cnt, int x, int y, Path path) {
         this.cnt = cnt;
         this.x = x;
         this.y = y;
@@ -130,12 +130,12 @@ class Node {
 class Path {
 
     char c;
-    Path_BFS parent;
+    Path parent;
 
     public Path() {
     }
 
-    public Path(char c, Path_BFS parent) {
+    public Path(char c, Path parent) {
         this.c = c;
         this.parent = parent;
     }
