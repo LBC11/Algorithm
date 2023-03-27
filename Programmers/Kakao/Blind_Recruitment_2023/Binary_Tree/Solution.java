@@ -3,6 +3,8 @@ package Programmers.Kakao.Blind_Recruitment_2023.Binary_Tree;
 주요 아이디어
 1. 이진수로 표현된 것에서 완전 이진 트리의 규칙 추정 -> 111 = 7
 2. 각 숫자를 이진수로 표현할 때 tree 의 height 가 몇인지 추론
+3. height 를 기준으로 tree 를 이진 트리로 표현할 때 몇 개의 node 가 필요한지 추론
+4. 3 에서 추론한 총 node 개수에 따라 root idx 추론
 3. 재귀 방식으로 이진수를 root 를 기준으로 left 와 right 로 분할하여 검사
     child 가 1인 경우: child 를 root 로 가지는 subtree 에서 탐색 지속
     child 가 0인 경우: child 를 root 로 가지는 subtree 에서 0이 있는지 확인
