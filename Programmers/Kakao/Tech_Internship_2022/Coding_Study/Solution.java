@@ -2,6 +2,13 @@ package Programmers.Kakao.Tech_Internship_2022.Coding_Study;
 
 import java.util.ArrayList;
 
+/*
+주요 아이디어
+1. dp 이용
+2.
+실패 이유 분석
+1.
+ */
 class Solution {
 
     int[][] map;
@@ -27,7 +34,7 @@ class Solution {
             if(problem[4] <= 60) sProblems.add(new Problem(problem[0], problem[1], problem[2], problem[3], problem[4]));
         }
 
-        map = new int[max_alp - alp + 1][max_cop - cop + 1];
+        map = new int[Math.max(1, max_alp - alp + 1)][Math.max(1, max_cop - cop + 1)];
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
@@ -39,7 +46,7 @@ class Solution {
 
         dp(alp, cop);
 
-        return map[max_alp - alp][max_cop - cop];
+        return map[map.length - 1][map[0].length - 1];
     }
 
     private void dp(int alp, int cop) {
@@ -58,21 +65,6 @@ class Solution {
                         map[i][j] = Math.min(map[x][y] + problem.cost, map[i][j]);
                     }
                 }
-//
-//                if (i >= 1) map[i][j] = Math.min(map[i - 1][j] + 1, map[i][j]);
-//                if (j >= 1) map[i][j] = Math.min(map[i][j - 1] + 1, map[i][j]);
-//
-//                for (int[] problem : problems) {
-////
-//                    int x = i - problem[2];
-//                    int y = j - problem[3];
-////
-//                    if (x < 0 || x >= map.length || y < 0 || y >= map[0].length) continue;
-//
-//                    if (x + alp >= problem[0] && y + cop >= problem[1]) {
-//                        map[i][j] = Math.min(map[x][y] + problem[4], map[i][j]);
-//                    }
-//                }
             }
         }
     }
