@@ -1,4 +1,4 @@
-package Programmers.Kakao.Hiking_Route;
+package Programmers.Kakao.Tech_Internship_2022.Hiking_Route;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,8 +80,9 @@ class Solution {
 
             Path curr_path = pq.poll();
             int place = curr_path.idx;
-            int cost =
         }
+
+        return 0;
     }
 }
 
