@@ -6,7 +6,7 @@ public class Test {
 
         int alp = 10;
         int cop = 15;
-        int[][] problems = {{0,0,150,150,2},{20,20,150,150,2}};
+        int[][] problems = {{0,0,30,30,2},{20,20,150,150,2}};
 
         Solution s = new Solution();
 
