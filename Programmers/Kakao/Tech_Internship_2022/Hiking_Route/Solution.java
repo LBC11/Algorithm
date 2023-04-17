@@ -2,6 +2,12 @@ package Programmers.Kakao.Tech_Internship_2022.Hiking_Route;
 
 import java.util.*;
 
+/*
+실패 분석
+1. 굳이 gate 1개 - summit 1개 이럴 필요가 없었다. summit 1개를 탐색할 때
+   gate 를 모두 pq에 더해버리면 된다. pq가 가장 낮은 cost 먼저 살핀다는
+   것이 보장되기에 summit 에 도착하자마자 return 해버리면 된다.
+ */
 class Solution {
 
     ArrayList<ArrayList<Path>> map;
@@ -33,24 +39,21 @@ class Solution {
         // 필요한 자료구조 init
         init(n, paths, gates, summits);
 
+        // 같은 min_intensity 여도 처음 return 하는 값의 산봉우리
+        // idx 가 더 작다는 것을 보장하기 위해해
+
         int[] answer = {0, Integer.MAX_VALUE};
 
         for(int summit : summits) {
 
-            int min_intensity = Integer.MAX_VALUE;
-
             // 해당 summit 을 들려야 하니 ban 목록에서 삭제
             ban.remove(summit);
 
-            for(int gate : gates) {
+            int min = Dijkstra(gates, summit);
 
-                // gate 는 다시 갈 일이 없으니 ban 목록에서 굳이 삭제하지 않는다.
-                min_intensity = Math.min(min_intensity, Dijkstra(gate, summit));
-            }
-
-            if(min_intensity < answer[1]) {
+            if(min < answer[1]) {
                 answer[0] = summit;
-                answer[1] = min_intensity;
+                answer[1] = min;
             }
 
             // 다시 ban 목록에 추가
@@ -60,16 +63,21 @@ class Solution {
         return answer;
     }
 
-    private int Dijkstra(int gate, int summit) {
+    private int Dijkstra(int[] gates, int summit) {
 
         // key: place_idx, value: 해당 place 까지 route 의 max_intensity 중 min value
         int[] max = new int[map.size()];
         Arrays.fill(max, Integer.MAX_VALUE);
 
         // intensity 가 낮은 순서대로 탐색을 하는
-        PriorityQueue<Path> pq = new PriorityQueue<>((Comparator.comparingInt(o -> o.cost)));
+        PriorityQueue<Path> pq = new PriorityQueue<>((o1, o2) -> {
+            if(o1.cost != o2.cost) return o1.cost - o2.cost;
+            else return o1.idx - o2.idx;
+        });
 
-        pq.add(new Path(gate, 0));
+        for (int gate : gates) {
+            pq.addAll(map.get(gate));
+        }
 
         while(!pq.isEmpty()) {
 
@@ -79,8 +87,10 @@ class Solution {
             int place = curr_path.idx;
             int cost = curr_path.cost;
 
-            // summit 까지의 min_intensity 보다 cost 가 크다면 탐색할 필요가 없다.
-            if(cost >= max[summit]) continue;
+            // summit 에 도착했다면 pq로 인해 현재의 route 가 min_intensity 임이 증명된다.
+            if(curr_path.idx == summit) {
+                break;
+            }
 
             for(Path path : map.get(place)) {
 
@@ -96,7 +106,6 @@ class Solution {
                     max[path.idx] = max_cost;
                     pq.add(new Path(path.idx, max_cost));
                 }
-
             }
         }
 
