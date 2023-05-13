@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        System.setIn(new java.io.FileInputStream("C:/Users/LBC/Desktop/Algorithm/Baekjun/DP/testcase.txt"));
+//        System.setIn(new java.io.FileInputStream("C:/Users/LBC/Desktop/Algorithm/Baekjun/DP/testcase.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         Solution sol = new Solution();
 
