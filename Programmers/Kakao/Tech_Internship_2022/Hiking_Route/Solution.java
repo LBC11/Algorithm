@@ -8,30 +8,39 @@ import java.util.*;
    gate 를 모두 pq에 더해버리면 된다. pq가 가장 낮은 cost 먼저 살핀다는
    것이 보장되기에 summit 에 도착하자마자 return 해버리면 된다.
  */
+
 class Solution {
 
-    ArrayList<ArrayList<Path>> map;
-    HashSet<Integer> ban;
+    ArrayList<ArrayList<Path>> paths;
+    int[] cities;
+    boolean[] isSummit;
 
     void init(int n, int[][] paths, int[] gates, int[] summits) {
 
-        map = new ArrayList<>(n + 1);
+        this.paths = new ArrayList<>(n + 1);
+
+        cities = new int[n + 1];
+        isSummit = new boolean[n + 1];
+
+        Arrays.fill(cities, 987654321);
+
+        for (int gate : gates) {
+            cities[gate] = 0;
+        }
+
+        for(int summit : summits) {
+            isSummit[summit] = true;
+        }
 
         for (int i = 0; i <= n; i++) {
-            map.add(new ArrayList<>());
+            this.paths.add(new ArrayList<>());
         }
 
         // 시작 도시에서 해당 도시까지의 경로정보
-        for(int[] path : paths) {
-            map.get(path[0]).add(new Path(path[1], path[2]));
-            map.get(path[1]).add(new Path(path[0], path[2]));
+        for (int[] path : paths) {
+            this.paths.get(path[0]).add(new Path(path[1], path[2]));
+            this.paths.get(path[1]).add(new Path(path[0], path[2]));
         }
-
-        // 순회중 gates 와 summits 은 하나씩만 방문해야 하기에
-        // 나머지 지점은 갈 수 없게 하기 위한 ban 목록
-        ban = new HashSet<>();
-        Collections.addAll(ban, Arrays.stream(gates).boxed().toArray(Integer[]::new));
-        Collections.addAll(ban, Arrays.stream(summits).boxed().toArray(Integer[]::new));
     }
 
     public int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
@@ -40,76 +49,61 @@ class Solution {
         init(n, paths, gates, summits);
 
         // 같은 min_intensity 여도 처음 return 하는 값의 산봉우리
-        // idx 가 더 작다는 것을 보장하기 위해해
-
-        int[] answer = {0, Integer.MAX_VALUE};
-
-        for(int summit : summits) {
-
-            // 해당 summit 을 들려야 하니 ban 목록에서 삭제
-            ban.remove(summit);
-
-            int min = Dijkstra(gates, summit);
-
-            if(min < answer[1]) {
-                answer[0] = summit;
-                answer[1] = min;
-            }
-
-            // 다시 ban 목록에 추가
-            ban.add(summit);
-        }
-
-        return answer;
+        // idx 가 더 작다는 것을 보장하기 위해
+        return Dijkstra(gates, summits);
     }
 
-    private int Dijkstra(int[] gates, int summit) {
-
-        // key: place_idx, value: 해당 place 까지 route 의 max_intensity 중 min value
-        int[] max = new int[map.size()];
-        Arrays.fill(max, Integer.MAX_VALUE);
+    private int[] Dijkstra(int[] gates, int[] summits) {
 
         // intensity 가 낮은 순서대로 탐색을 하는
-        PriorityQueue<Path> pq = new PriorityQueue<>((o1, o2) -> {
-            if(o1.cost != o2.cost) return o1.cost - o2.cost;
+        PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> {
+            if (o1.min != o2.min) return o1.min - o2.min;
             else return o1.idx - o2.idx;
         });
 
         for (int gate : gates) {
-            pq.addAll(map.get(gate));
+            pq.add(new Node(gate, 0));
         }
 
-        while(!pq.isEmpty()) {
-
-            Path curr_path = pq.poll();
+        while (!pq.isEmpty()) {
+            Node curr_Node = pq.poll();
 
             // 현재 위치
-            int place = curr_path.idx;
-            int cost = curr_path.cost;
+            int idx = curr_Node.idx;
+            int cost = curr_Node.min;
 
-            // summit 에 도착했다면 pq로 인해 현재의 route 가 min_intensity 임이 증명된다.
-            if(curr_path.idx == summit) {
-                break;
+            if(isSummit[idx] || cost >= cities[idx]) {
+                continue;
             }
 
-            for(Path path : map.get(place)) {
+            for (Path path : paths.get(idx)) {
 
-                // path 가 ban 목록에 있다면
-                if(ban.contains(path.idx)) continue;
-
-                int max_cost;
-                if(cost != 0) max_cost = Math.max(cost, path.cost);
-                else max_cost = path.cost;
+                int max_cost = Math.max(cost, path.cost);
 
                 // min_cost 가 기존의 min 보다 작다면 pq 에 추가해준다.
-                if(max_cost < max[path.idx]) {
-                    max[path.idx] = max_cost;
-                    pq.add(new Path(path.idx, max_cost));
+                if (max_cost < cities[path.idx]) {
+                    cities[path.idx] = max_cost;
+
+                    // 중복되는 node 가 pq 에 들어가는 것을 방지하기 위해
+                    pq.add(new Node(path.idx, max_cost));
                 }
             }
         }
 
-        return max[summit];
+        Arrays.sort(summits);
+
+        int idx = 0;
+        int min = 987654321;
+
+        for (int summit : summits) {
+            if (cities[summit] < min) {
+
+                idx = summit;
+                min = cities[summit];
+            }
+        }
+
+        return new int[]{idx, min};
     }
 }
 
@@ -121,5 +115,15 @@ class Path {
     public Path(int idx, int cost) {
         this.idx = idx;
         this.cost = cost;
+    }
+}
+
+class Node {
+    int idx;
+    int min;
+
+    public Node(int idx, int min) {
+        this.idx = idx;
+        this.min = min;
     }
 }
