@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+/*
+1. 아이디어
+    간단한 구현 문제
+    But, 항상 어떠한 자료구조가 좋을지 고민하느라 시간을 많이 소비하는데
+    좀 더 빠르게 구현하는 연습을 들이자!!!
+ */
 class Solution {
 
     HashMap<String, Set<String>> map;
