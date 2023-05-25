@@ -3,29 +3,36 @@ package Programmers.Kakao.Tech_Internship_2022.Hiking_Route;
 import java.util.*;
 
 /*
+아이디어
+1. 각 산의 지점, 그 지점으로 가는 통로 등을 map 에 저장
+2. PriorityQueue 에 gate 을 시작점으로 주고
+3. Dijkstra 를 통해 각 summit 까지 걸리는 min intensity 계산
+    단, Dijkstra 도중 summit 은 pq에 더하지 않는다.
+    -> 하나의 summit 으로 가는 데 다른 summit 을 거칠 수 없다는 조건 때문에
+4. 모든 summits 중 조건을 가장 만족하는 결과 return
+
 실패 분석
-1. 굳이 gate 1개 - summit 1개 이럴 필요가 없었다. summit 1개를 탐색할 때
-   gate 를 모두 pq에 더해버리면 된다. pq가 가장 낮은 cost 먼저 살핀다는
-   것이 보장되기에 summit 에 도착하자마자 return 해버리면 된다.
+1. 굳이 gate 1개 - summit 1개 이럴 필요가 없었다.
+2. ||, && -> 이거 잘못 사용하고 원인 못 찾아서 한 시간을 헤맸다...
  */
 
 class Solution {
 
     ArrayList<ArrayList<Path>> paths;
-    int[] cities;
+    int[] mountains;
     boolean[] isSummit;
 
     void init(int n, int[][] paths, int[] gates, int[] summits) {
 
         this.paths = new ArrayList<>(n + 1);
 
-        cities = new int[n + 1];
+        mountains = new int[n + 1];
         isSummit = new boolean[n + 1];
 
-        Arrays.fill(cities, 987654321);
+        Arrays.fill(mountains, 987654321);
 
         for (int gate : gates) {
-            cities[gate] = 0;
+            mountains[gate] = 0;
         }
 
         for(int summit : summits) {
@@ -72,7 +79,7 @@ class Solution {
             int idx = curr_Node.idx;
             int cost = curr_Node.min;
 
-            if(isSummit[idx] || cost >= cities[idx]) {
+            if(isSummit[idx] || cost >= mountains[idx]) {
                 continue;
             }
 
@@ -81,8 +88,8 @@ class Solution {
                 int max_cost = Math.max(cost, path.cost);
 
                 // min_cost 가 기존의 min 보다 작다면 pq 에 추가해준다.
-                if (max_cost < cities[path.idx]) {
-                    cities[path.idx] = max_cost;
+                if (max_cost < mountains[path.idx]) {
+                    mountains[path.idx] = max_cost;
 
                     // 중복되는 node 가 pq 에 들어가는 것을 방지하기 위해
                     pq.add(new Node(path.idx, max_cost));
@@ -96,10 +103,10 @@ class Solution {
         int min = 987654321;
 
         for (int summit : summits) {
-            if (cities[summit] < min) {
+            if (mountains[summit] < min) {
 
                 idx = summit;
-                min = cities[summit];
+                min = mountains[summit];
             }
         }
 
